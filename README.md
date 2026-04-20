@@ -2,7 +2,7 @@
 
 # 🌌 Web Portfolio v1.00
 
-A personal portfolio built to showcase current technical expertise in **Web Developing**. This project focuses on a minimalist "Midnight" aesthetic with high-end editorial layouts and subtle micro-interactions. More work will be done to this in the future.
+A personal portfolio built to showcase current technical expertise in **Full-Stack Development**. This project focuses on a minimalist "Midnight" aesthetic with high-end editorial layouts and subtle micro-interactions. More work will be done to this in the future.
 
 ## 🚀 Technical Stack
 
