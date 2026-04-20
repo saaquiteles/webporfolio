@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b0b0f;
+  --card: #111217;
+  --border: #1f2230;
+  --text-strong: #ffffff;    /* Pure white for headings */
+  --text: #a1a1aa;           /* Soft gray for descriptions */
+  --text-muted: #71717a;     /* Darker gray for small labels */
+  --accent: #8b5cf6;
+  --accent-soft: rgba(139, 92, 246, 0.15);
+}
+
+/* Light Mode */
+.light {
+  --bg: #fdfdfd;             /* Off-white background to reduce glare */
+  --card: #ffffff;           /* Clean white cards */
+  --border: #e2e8f0;         /* Soft borders for definition */
+  --text-strong: #0f172a;    /* Deep navy for headings (better than pure black) */
+  --text: #334155;           /* Slate gray for main body text */
+  --text-muted: #64748b;     /* Gray for secondary information */
+  --accent-soft: rgba(139, 92, 246, 0.1);
+}
+
+
+body {
+  @apply bg-[var(--bg)] text-[var(--text)] antialiased transition-colors duration-500;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@layer base {
+  h1, h2, h3, h4 {
+    @apply font-bold tracking-tight text-[var(--text-strong)] mb-4;
+  }
+
+  h1 { @apply text-7xl md:text-7xl font-extrabold tracking-[-0.05em] leading-[0.8];
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    text-transform: uppercase;
+    font-feature-settings: "ss01", "cv01", "cv11"; }
+  h2 { @apply text-3xl md:text-5xl leading-tight mb-6; }
+  h3 { @apply text-xl md:text-2xl font-semibold; }
+
+  p {
+    @apply leading-relaxed text-lg max-w-[65ch] mb-4;
+  }
+}
+
+@layer components {
+
+  /* Centered Section Layout */
+  .section {
+    @apply w-full max-w-6xl mx-auto px-6 py-20 md:py-32 
+           flex flex-col items-center justify-center;
+  }
+
+  /* Premium Glass Card */
+  .card {
+    @apply bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius-lg)] p-8
+           backdrop-blur-xl transition-all duration-500 ease-out;
+  }
+
+  .card-hover {
+    @apply hover:border-purple-500/30 hover:shadow-[0_0_40px_-15px_rgba(139,92,246,0.3)]
+           hover:-translate-y-2;
+  }
+
+  /* Refined Buttons */
+  .btn-primary {
+    @apply px-7 py-3 rounded-[var(--radius-md)] font-semibold
+           bg-gradient-to-r from-purple-600 to-indigo-600
+           text-white shadow-lg shadow-purple-500/20
+           active:scale-95 transition-all duration-300;
+  }
+
+  .btn-outline {
+    @apply px-7 py-3 rounded-[var(--radius-md)] border border-[var(--border)]
+           hover:bg-white/5 hover:border-[var(--text)] transition-colors duration-300;
+  }
+
+  /* UX/UI Elements */
+  .gradient-text {
+    @apply bg-gradient-to-br from-white via-white to-purple-400 bg-clip-text text-transparent;
+  }
+
+  .tag {
+    @apply px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest
+           bg-white/5 border border-white/10 text-[var(--text-strong)];
+  }
+
+  /* Subtle Background Glows */
+  .glow-mesh {
+    @apply absolute -z-10 opacity-20 blur-[120px] pointer-events-none;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  }
+}
