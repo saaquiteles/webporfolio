@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 
-// 🎨 Animation Variants for a "Premium" feel
 const sectionVariants = {
   hidden: { 
     opacity: 0, 
