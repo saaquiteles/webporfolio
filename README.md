@@ -1,33 +1,33 @@
 ***
 
-# 🔎 Web Portfolio v2.0
+# 🎯 Web Portfolio v3.0
 
-A personal portfolio that reimagines a CV as a naturalist's **field guide** — projects read as catalogued specimens, skills as a taxonomy, experience as an expedition log. Built to showcase full-stack development work, led by a published, internationally peer-reviewed research project in embedded computer vision.
+A personal portfolio reimagined as a 3D first-person tactical firing range, inspired by Valorant's Range/Practice Facility. Visitors walk the range, mouse-look and shoot floating holographic targets to unlock real resume sections — built to showcase full-stack development work, led by a published, internationally peer-reviewed research project in embedded computer vision.
 
 ## 🚀 Technical Stack
 
 * **Framework**: [React 19](https://reactjs.org/) on [Vite](https://vitejs.dev/)
-* **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom design-token system for dynamic theming
-* **Animations**: [Framer Motion](https://www.framer.com/motion/) — staggered reveals and a "drawer-open" motion signature
-* **Icons**: [React Icons](https://react-icons.github.io/react-icons/)
-* **Theming**: Custom React Context API for persistent Light/Dark mode
+* **3D / Engine**: [Three.js](https://threejs.org/) via [React Three Fiber](https://r3f.docs.pmnd.rs/) and [drei](https://github.com/pmndrs/drei) — all geometry is primitive/procedural, no imported 3D model or texture assets
+* **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom design-token system for the tactical HUD
+* **Animations**: [Framer Motion](https://www.framer.com/motion/) for HUD transitions (loading screen, modals, theme-style swaps)
+* **Icons**: [Lucide](https://lucide.dev/)
+* **Audio**: procedural Web Audio (gunshots, impacts, UI cues) — no external audio files
 
-## ✨ Design System — Field Guide / Specimen Plate
+## ✨ The Range
 
-* **Specimen Plates**: every content block (hero, projects, timeline entries) is composed as a numbered, tagged specimen card with pinned-label typography — no generic glass cards or glow effects.
-* **Palette**: a deep walnut/charcoal specimen-drawer ground in dark mode, cool archival card-stock in light mode, with brass and moss classification tags plus a rare oxblood "Published" stamp reserved for the differentiator entry.
-* **Typography**: [Newsreader](https://fonts.google.com/specimen/Newsreader) for field-note narrative and display headings, [Space Mono](https://fonts.google.com/specimen/Space+Mono) for catalog/accession-number labels.
-* **Dynamic Theming**: smooth, persistent Light/Dark transitions across the whole system.
-* **Responsive Architecture**: mobile-first, scaling from handheld devices to ultra-wide monitors.
+* **Tactical loading screen**: an asset-progress readout with a "LOCK IN" button that engages pointer lock and unmutes audio.
+* **First-person controls**: WASD movement with floor-bound clamping, mouse-look via Pointer Lock, and a fixed crosshair.
+* **Weapon system**: a procedurally modeled sidearm with per-shot recoil (kick + dip), a muzzle flash, a bullet tracer streaking to wherever the shot lands, and a procedural gunshot cue — fires anywhere in the range, not just on a target.
+* **Interactive targets**: five floating holographic targets down the range, each mapped to a real resume section. Shooting one unlocks it, marks it on the radar HUD, and opens a glassmorphism panel with real content.
+* **The range itself**: a warm industrial warehouse shell — exposed wood-truss roof with cross-bracing, tan plaster walls, crates, arched windows, a raised loft, amber floor guide lines, and a suspended tactical-cyan scoreboard prop.
 
-## 🗂️ Sections
+## 🗂️ Resume Sections (shoot to unlock)
 
-* **Specimen Plate No. 001 (Hero)** — leads with the site's differentiator: a published research project, presented as an illustrated plate with real stats and a pinned collector's card introducing the site's owner.
-* **Field Notes (About)** — a journal-style bio with a pinned specimen photograph.
-* **Specimen Catalog (Projects)** — real projects as catalogued, numbered entries with classification tags and status stamps.
-* **Taxonomy Key (Skills)** — skills grouped and displayed as a specimen-drawer grid.
-* **Expedition Log (Experience, Education, Certifications, Accomplishments)** — a dated log of deployments, training grounds, field badges, and excursions.
-* **Correspondence (Contact)** — real contact details plus a downloadable field report (resume).
+* **01 // About Me** — bio, name, title, location.
+* **02 // Technical Skills** — categorized skill badges.
+* **03 // Featured Projects** — real projects, including the published research below, with links.
+* **04 // Work Experience** — deployments, education, credentials, and field excursions.
+* **05 // Contact** — real email, phone, LinkedIn, GitHub, resume download, and a `mailto:`-based quick-message action.
 
 ## 🛠️ Featured Project
 
@@ -51,6 +51,8 @@ A personal portfolio that reimagines a CV as a naturalist's **field guide** — 
     ```bash
     npm run build
     ```
+
+> Note: this is a desktop, mouse-and-keyboard experience (Pointer Lock API) — there's no mobile/touch fallback.
 
 ---
 
