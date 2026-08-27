@@ -4,17 +4,21 @@ import { Crosshair, Radio } from "lucide-react";
 import { personal } from "../data/cvData";
 
 // Minimum on-screen duration for the loading sequence, in ms. This project
-// has almost nothing to actually load (one attempted GLTF fetch that 404s
-// almost instantly, plus font/SDF setup for the 3D Text labels) — without a
-// cosmetic floor, useProgress would flash from 0 to 100 in a single frame
-// and the tactical loading screen would never really be seen. The real
-// useProgress() value still gates "LOCK IN" — this only sets a minimum, it
-// never fakes 100% ahead of the real assets actually settling.
+// has no real assets to load anymore — no GLTF models, no textures,
+// everything is procedural geometry — so Three.js's loading manager never
+// has anything registered with it, and useProgress() never reports 100%
+// (there's nothing to finish). It's still read below for display/flavor
+// (in case the 3D Text labels' font loading ever registers with it), but
+// the actual "ready" gate is this cosmetic timer alone. It used to also
+// require useProgress() to hit 100%, back when glock.glb's fetch-then-404
+// was the one thing that ever completed and opened that gate — removing
+// that file removed the only thing making that condition ever become true,
+// which is what got the loading screen stuck.
 const MIN_DISPLAY_MS = 1500;
 const VISUALIZER_BARS = 16;
 
 export default function LoadingScreen({ visible, onEnter }) {
-  const { progress: realProgress, active } = useProgress();
+  const { progress: realProgress } = useProgress();
   const [floor, setFloor] = useState(0);
 
   useEffect(() => {
@@ -36,7 +40,9 @@ export default function LoadingScreen({ visible, onEnter }) {
   // floor ramp — both are already monotonically increasing on their own,
   // so no extra state/effect is needed just to combine them.
   const display = Math.min(100, Math.max(realProgress, floor));
-  const ready = display >= 100 && realProgress >= 100 && !active;
+  // Gated on the cosmetic floor alone, not realProgress/active — with no
+  // real assets left to load, those never resolve to "done" on their own.
+  const ready = floor >= 100;
   const wholePercent = Math.round(display);
 
   return (
