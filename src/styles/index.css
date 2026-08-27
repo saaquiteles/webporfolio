@@ -2,98 +2,173 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   FIRING RANGE — tactical HUD design tokens
+   One fixed dark aesthetic (no light/dark toggle for this build). Colors are
+   authored as space-separated RGB channels so Tailwind's `/opacity`
+   modifier (bg-cyan/70, border-cyan/30, etc.) works against them directly —
+   see the withOpacity() helper in tailwind.config.js.
+   ========================================================================== */
+
 :root {
-  --bg: #0b0b0f;
-  --card: #111217;
-  --border: #1f2230;
-  --text-strong: #ffffff;    /* Pure white for headings */
-  --text: #a1a1aa;           /* Soft gray for descriptions */
-  --text-muted: #71717a;     /* Darker gray for small labels */
-  --accent: #8b5cf6;
-  --accent-soft: rgba(139, 92, 246, 0.15);
+  --color-navy: 11 14 20; /* #0B0E14 — deep background */
+  --color-charcoal: 20 24 34; /* #141822 — matte panel/environment grey */
+  --color-crimson: 255 70 85; /* #FF4655 — Valorant-crimson primary accent */
+  --color-cyan: 0 240 255; /* #00F0FF — tactical cyan */
+  --color-emerald: 0 255 135; /* #00FF87 — neon emerald (unlocked state) */
+  --color-offwhite: 236 232 225; /* #ECE8E1 — HUD text */
+
+  --glass: rgba(15, 23, 42, 0.75);
+  --glass-border: rgba(0, 240, 255, 0.3);
+
+  --font-display: "Rajdhani", "Segoe UI", sans-serif;
+  --font-mono: "Share Tech Mono", "IBM Plex Mono", ui-monospace, monospace;
 }
 
-/* Light Mode */
-.light {
-  --bg: #fdfdfd;             /* Off-white background to reduce glare */
-  --card: #ffffff;           /* Clean white cards */
-  --border: #e2e8f0;         /* Soft borders for definition */
-  --text-strong: #0f172a;    /* Deep navy for headings (better than pure black) */
-  --text: #334155;           /* Slate gray for main body text */
-  --text-muted: #64748b;     /* Gray for secondary information */
-  --accent-soft: rgba(139, 92, 246, 0.1);
+* {
+  box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
 
 body {
-  @apply bg-[var(--bg)] text-[var(--text)] antialiased transition-colors duration-500;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  margin: 0;
+  background: rgb(var(--color-navy));
+  color: rgb(var(--color-offwhite));
+  font-family: var(--font-mono);
+  /* Full-bleed FPS canvas experience, not a scrolling document. */
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(var(--color-crimson));
+  color: rgb(var(--color-navy));
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--color-cyan));
+  outline-offset: 2px;
 }
 
 @layer base {
-  h1, h2, h3, h4 {
-    @apply font-bold tracking-tight text-[var(--text-strong)] mb-4;
-  }
-
-  h1 { @apply text-7xl md:text-7xl font-extrabold tracking-[-0.05em] leading-[0.8];
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
     text-transform: uppercase;
-    font-feature-settings: "ss01", "cv01", "cv11"; }
-  h2 { @apply text-3xl md:text-5xl leading-tight mb-6; }
-  h3 { @apply text-xl md:text-2xl font-semibold; }
-
-  p {
-    @apply leading-relaxed text-lg max-w-[65ch] mb-4;
+    letter-spacing: 0.04em;
+    color: rgb(var(--color-offwhite));
+    margin: 0;
   }
 }
 
 @layer components {
+  /* ------------------------------------------------------------------ */
+  /* Glassmorphism HUD surfaces                                          */
+  /* ------------------------------------------------------------------ */
 
-  /* Centered Section Layout */
-  .section {
-    @apply w-full max-w-6xl mx-auto px-6 py-20 md:py-32 
-           flex flex-col items-center justify-center;
+  .hud-panel {
+    @apply relative border backdrop-blur-md;
+    background: var(--glass);
+    border-color: var(--glass-border);
   }
 
-  /* Premium Glass Card */
-  .card {
-    @apply bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius-lg)] p-8
-           backdrop-blur-xl transition-all duration-500 ease-out;
+  /* Targeting-reticle corner brackets — tactile framing, not a glow. */
+  .hud-corners {
+    position: relative;
+  }
+  .hud-corners::before,
+  .hud-corners::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+  }
+  .hud-corners::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid rgb(var(--color-cyan));
+    border-left: 2px solid rgb(var(--color-cyan));
+  }
+  .hud-corners::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid rgb(var(--color-cyan));
+    border-right: 2px solid rgb(var(--color-cyan));
   }
 
-  .card-hover {
-    @apply hover:border-purple-500/30 hover:shadow-[0_0_40px_-15px_rgba(139,92,246,0.3)]
-           hover:-translate-y-2;
+  .hud-eyebrow {
+    @apply font-mono text-[11px] font-bold uppercase tracking-[0.3em];
+    color: rgb(var(--color-cyan));
   }
 
-  /* Refined Buttons */
-  .btn-primary {
-    @apply px-7 py-3 rounded-[var(--radius-md)] font-semibold
-           bg-gradient-to-r from-purple-600 to-indigo-600
-           text-white shadow-lg shadow-purple-500/20
-           active:scale-95 transition-all duration-300;
+  /* ------------------------------------------------------------------ */
+  /* Buttons — angular clipped corners, tactical press states            */
+  /* ------------------------------------------------------------------ */
+
+  .tactical-btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-display font-bold uppercase
+           tracking-[0.12em] text-sm border transition-all duration-150 ease-out;
+    background: rgb(var(--color-crimson));
+    color: rgb(var(--color-navy));
+    border-color: rgb(var(--color-crimson));
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  }
+  .tactical-btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+  }
+  .tactical-btn:active {
+    transform: translateY(1px);
+    filter: brightness(0.92);
   }
 
-  .btn-outline {
-    @apply px-7 py-3 rounded-[var(--radius-md)] border border-[var(--border)]
-           hover:bg-white/5 hover:border-[var(--text)] transition-colors duration-300;
+  .tactical-btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-display font-bold uppercase
+           tracking-[0.12em] text-xs border transition-all duration-150 ease-out;
+    background: transparent;
+    color: rgb(var(--color-cyan));
+    border-color: rgb(var(--color-cyan) / 0.5);
+    clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  }
+  .tactical-btn-outline:hover {
+    background: rgb(var(--color-cyan) / 0.1);
+    border-color: rgb(var(--color-cyan));
   }
 
-  /* UX/UI Elements */
-  .gradient-text {
-    @apply bg-gradient-to-br from-white via-white to-purple-400 bg-clip-text text-transparent;
+  /* ------------------------------------------------------------------ */
+  /* Tags / stat readouts                                                */
+  /* ------------------------------------------------------------------ */
+
+  .tactical-tag {
+    @apply inline-flex items-center px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] border;
+    color: rgb(var(--color-offwhite));
+    border-color: rgb(var(--color-offwhite) / 0.25);
+    background: rgb(var(--color-offwhite) / 0.03);
   }
 
-  .tag {
-    @apply px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest
-           bg-white/5 border border-white/10 text-[var(--text-strong)];
+  .stat-readout {
+    @apply font-mono text-[11px] uppercase tracking-[0.1em];
+    color: rgb(var(--color-emerald));
   }
+}
 
-  /* Subtle Background Glows */
-  .glow-mesh {
-    @apply absolute -z-10 opacity-20 blur-[120px] pointer-events-none;
-    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+@layer utilities {
+  @keyframes range-ping {
+    0%,
+    100% {
+      transform: scaleY(0.55);
+    }
+    50% {
+      transform: scaleY(1);
+    }
   }
 }
