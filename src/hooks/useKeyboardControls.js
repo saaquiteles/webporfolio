@@ -8,14 +8,21 @@ const KEY_MAP = {
   KeyA: "left",
   ArrowLeft: "left",
   KeyD: "right",
-  ArrowRight: "right"
+  ArrowRight: "right",
+  Space: "jump"
 };
 
 // A ref-backed WASD/arrow-key tracker — deliberately not React state, since
 // it's read every animation frame by FirstPersonRig and doesn't need to
 // trigger re-renders on every keystroke.
 export default function useKeyboardControls() {
-  const keys = useRef({ forward: false, backward: false, left: false, right: false });
+  const keys = useRef({
+    forward: false,
+    backward: false,
+    left: false,
+    right: false,
+    jump: false
+  });
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -34,6 +41,7 @@ export default function useKeyboardControls() {
       keys.current.backward = false;
       keys.current.left = false;
       keys.current.right = false;
+      keys.current.jump = false;
     };
 
     window.addEventListener("keydown", handleKeyDown);
