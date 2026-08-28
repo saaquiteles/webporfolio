@@ -110,6 +110,33 @@ export const STAIR_WALLS = MEZZANINE_STEPS.flatMap((tread) => [
   { minX: tread.maxX, maxX: tread.maxX + STAIR_WALL_THICKNESS, minY: 0, maxY: tread.topY, minZ: tread.minZ, maxZ: tread.maxZ }
 ]);
 
+// Two wall segments filling the mezzanine's front (near/stairs-facing)
+// edge, one on each side of the stair opening. getGroundHeight already
+// treats the entire area under the mezzanine's footprint as "3.6m tall"
+// regardless of the player's actual height, so a player at floor level
+// could never walk past this edge anyway (outside the stair corridor) —
+// that was an invisible wall. These panels just make that existing,
+// unavoidable boundary visible instead of confusing.
+const FRONT_WALL_THICKNESS = 0.15;
+export const MEZZANINE_FRONT_WALLS = [
+  {
+    minX: -MEZZANINE_WIDTH / 2,
+    maxX: MEZZANINE_STEPS[0].minX,
+    minY: 0,
+    maxY: MEZZANINE_Y,
+    minZ: MEZZANINE_NEAR_EDGE_Z - FRONT_WALL_THICKNESS / 2,
+    maxZ: MEZZANINE_NEAR_EDGE_Z + FRONT_WALL_THICKNESS / 2
+  },
+  {
+    minX: MEZZANINE_STEPS[0].maxX,
+    maxX: MEZZANINE_WIDTH / 2,
+    minY: 0,
+    maxY: MEZZANINE_Y,
+    minZ: MEZZANINE_NEAR_EDGE_Z - FRONT_WALL_THICKNESS / 2,
+    maxZ: MEZZANINE_NEAR_EDGE_Z + FRONT_WALL_THICKNESS / 2
+  }
+];
+
 // Every surface in the range the player can stand on top of (all the
 // stair treads, plus the mezzanine floor itself).
 export const SOLIDS = [...MEZZANINE_STEPS, MEZZANINE_PLATFORM];

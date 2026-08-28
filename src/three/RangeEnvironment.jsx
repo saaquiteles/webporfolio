@@ -15,7 +15,8 @@ import {
   MEZZANINE_CENTER_Z,
   MEZZANINE_STAIR_X,
   MEZZANINE_STEPS,
-  STAIR_WALLS
+  STAIR_WALLS,
+  MEZZANINE_FRONT_WALLS
 } from "./levelGeometry";
 
 // Warm industrial warehouse shell — a practice-range hangar with an exposed
@@ -219,6 +220,20 @@ function Mezzanine() {
           FirstPersonRig collides against, via levelGeometry.js's
           STAIR_WALLS */}
       {STAIR_WALLS.map((wall, i) => (
+        <mesh
+          key={i}
+          position={[(wall.minX + wall.maxX) / 2, (wall.minY + wall.maxY) / 2, (wall.minZ + wall.maxZ) / 2]}
+          raycast={() => null}
+        >
+          <boxGeometry args={[wall.maxX - wall.minX, wall.maxY - wall.minY, wall.maxZ - wall.minZ]} />
+          <meshStandardMaterial color={PLASTER_TRIM} roughness={0.85} />
+        </mesh>
+      ))}
+
+      {/* seals the underside of the mezzanine's front edge on either side
+          of the stairs — see levelGeometry.js's MEZZANINE_FRONT_WALLS for
+          why this space was already unreachable */}
+      {MEZZANINE_FRONT_WALLS.map((wall, i) => (
         <mesh
           key={i}
           position={[(wall.minX + wall.maxX) / 2, (wall.minY + wall.maxY) / 2, (wall.minZ + wall.maxZ) / 2]}

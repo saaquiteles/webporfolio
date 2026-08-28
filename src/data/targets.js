@@ -27,7 +27,10 @@ export const TARGETS = [
     id: "projects",
     label: "03 // FEATURED PROJECTS",
     sublabel: "OPERATIONS LOG",
-    position: [-2.8, 1.55, -6]
+    // Nudged from z=-6 to z=-5.2 — that used to sit almost exactly on the
+    // mezzanine's front wall (see MEZZANINE_FRONT_WALLS in levelGeometry.js),
+    // which would otherwise clip straight through this target's icosahedron.
+    position: [-2.8, 1.55, -5.2]
   },
   {
     id: "experience",
