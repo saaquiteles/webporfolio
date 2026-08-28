@@ -1,8 +1,12 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
+// How long the muzzle flash stays visible after firing, in seconds.
 const FLASH_LIFETIME = 0.07;
 
+// Shows a brief flash of light at the gun's barrel tip every time it
+// fires, then fades it back out.
+//
 // A point light + a small flash mesh anchored at the barrel tip, fired
 // imperatively (via ref) rather than through React state — a shot needs to
 // be instantaneous and shouldn't wait on a render cycle. Decays to nothing
@@ -13,6 +17,9 @@ const MuzzleFlash = forwardRef(function MuzzleFlash(_props, ref) {
   const materialRef = useRef();
   const life = useRef(0);
 
+  // Exposes two methods to whichever parent holds this component's ref:
+  // trigger() starts the flash, and getWorldPosition() reports exactly
+  // where the muzzle is in the 3D world.
   useImperativeHandle(
     ref,
     () => ({
@@ -31,6 +38,8 @@ const MuzzleFlash = forwardRef(function MuzzleFlash(_props, ref) {
     []
   );
 
+  // Every frame, counts the flash's remaining lifetime down and fades its
+  // light/mesh out accordingly, hiding both once it's fully expired.
   useFrame((_, delta) => {
     if (life.current <= 0) {
       if (lightRef.current && lightRef.current.intensity !== 0) lightRef.current.intensity = 0;
@@ -50,6 +59,8 @@ const MuzzleFlash = forwardRef(function MuzzleFlash(_props, ref) {
     if (materialRef.current) materialRef.current.opacity = t;
   });
 
+  // Renders the flash's light source and its small glowing sphere mesh,
+  // positioned just past the gun's barrel tip.
   return (
     // Just beyond ProceduralGlock's barrel-tip mesh (z = -0.15, radius
     // 0.025) — negative Z is forward here too, matching WeaponRig's convention.

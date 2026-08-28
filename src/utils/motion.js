@@ -4,6 +4,7 @@
 // signature instead of every component inventing its own timing curve.
 export const drawerEase = [0.16, 1, 0.3, 1];
 
+// A Framer Motion variant that fades an element in while it slides up slightly, from hidden to visible.
 export const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -41,6 +42,7 @@ export const modalIn = {
   }
 };
 
+// Builds a Framer Motion variant that staggers its children's entrance animations one after another instead of all at once.
 export const stagger = (staggerChildren = 0.08, delayChildren = 0.1) => ({
   hidden: {},
   visible: {

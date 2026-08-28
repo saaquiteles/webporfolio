@@ -6,6 +6,9 @@ import MuzzleFlash from "./MuzzleFlash";
 import Hands from "./Hands";
 import { GUN_Y_OFFSET } from "./weaponConstants";
 
+// Where the gun+hands sit relative to the camera, at rest (before any
+// recoil is applied).
+//
 // Anchored to the camera at [0.225, -0.18, -0.5] relative to camera — this
 // component is rendered as a JSX child of <PerspectiveCamera>, so its own
 // local position IS that camera-relative offset for free, no manual
@@ -26,6 +29,9 @@ import { GUN_Y_OFFSET } from "./weaponConstants";
 // visible in a real two-handed grip.
 const REST_POSITION = [0.225, -0.18, -0.5];
 
+// How strongly the gun kicks back/up/down when fired, on each of its three
+// recoil axes.
+//
 // Recoil reads on three independent axes, each damped back to rest at its
 // own rate. Pure +Z translation (toward/away from the camera) was the
 // original recoil axis and is nearly imperceptible up close: motion along
@@ -39,6 +45,9 @@ const RECOIL_KICK_Z = 0.16;
 const RECOIL_KICK_PITCH = 0.34;
 const RECOIL_KICK_DIP = 0.07;
 
+// An extra downward nudge applied only to the gun (not the hands), to
+// close the visual gap between the grip and the hands holding it.
+//
 // A further gun-only nudge, on top of GUN_Y_OFFSET — the gun and hands
 // now share that offset's group (see the note below), so GUN_Y_OFFSET
 // alone moves them together and can't close a gap between them. This
@@ -57,6 +66,9 @@ const GUN_TO_HAND_NUDGE = GUN_Y_OFFSET * 0.7;
 // unsynced second copy is exactly what caused the grip to keep
 // reappearing below the hand across several fix attempts.
 
+// Renders the first-person gun + hands viewmodel, and exposes fire()/
+// getMuzzleWorldPosition() so RangeScene can trigger shots and read where
+// the muzzle currently is.
 const WeaponRig = forwardRef(function WeaponRig(_props, ref) {
   const groupRef = useRef();
   const muzzleRef = useRef();
@@ -64,6 +76,9 @@ const WeaponRig = forwardRef(function WeaponRig(_props, ref) {
   const recoilPitch = useRef(0);
   const recoilDip = useRef(0);
 
+  // Exposes fire() and getMuzzleWorldPosition() to whichever parent holds
+  // this component's ref, so firing/aiming logic can live outside this
+  // component.
   useImperativeHandle(
     ref,
     () => ({
@@ -83,6 +98,8 @@ const WeaponRig = forwardRef(function WeaponRig(_props, ref) {
     []
   );
 
+  // Every frame: eases the recoil kick back down to zero, and applies the
+  // current recoil amount to the gun's actual position/rotation.
   useFrame((_, delta) => {
     // Exponential decay back to rest — the same damp-to-zero pattern as
     // the crosshair/emissive lerps elsewhere in the scene, just applied to
@@ -99,6 +116,8 @@ const WeaponRig = forwardRef(function WeaponRig(_props, ref) {
     group.rotation.x = recoilPitch.current;
   });
 
+  // Renders the gun, its muzzle flash, and the hands, nested so the gun
+  // and hands share the same positioning offsets (see the comments above).
   return (
     <group ref={groupRef} position={REST_POSITION}>
       <group position={[0, GUN_Y_OFFSET, 0]}>

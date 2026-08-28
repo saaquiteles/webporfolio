@@ -3,15 +3,18 @@ import { ExternalLink } from "lucide-react";
 import { drawerIn, stagger } from "../../utils/motion";
 import { projects } from "../../data/cvData";
 
+// Renders the Projects panel: one animated card per project pulled from the CV data.
 export default function ProjectsPanel() {
   return (
     <motion.div variants={stagger()} initial="hidden" animate="visible" className="space-y-5">
+      {/* Loop over every project and render a card for each one. */}
       {projects.map((project) => (
         <motion.article
           key={project.accession}
           variants={drawerIn}
           className="border border-offwhite/15 bg-offwhite/[0.03] p-4"
         >
+          {/* Accession number and status tag (e.g. PUBLISHED) for this project. */}
           <div className="flex items-center justify-between gap-3 mb-2">
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-offwhite/40">
               Acc. {project.accession}
@@ -25,6 +28,7 @@ export default function ProjectsPanel() {
             </span>
           </div>
 
+          {/* Project title, an optional self-referential note, and the description text. */}
           <h3 className="text-lg mb-1 leading-snug">{project.title}</h3>
 
           {project.selfReferential && (
@@ -33,6 +37,7 @@ export default function ProjectsPanel() {
 
           <p className="text-sm text-offwhite/75 whitespace-pre-line mb-3">{project.description}</p>
 
+          {/* Optional bullet list of project highlights. */}
           {project.highlights && (
             <ul className="space-y-1 mb-3">
               {project.highlights.map((highlight) => (
@@ -44,6 +49,7 @@ export default function ProjectsPanel() {
             </ul>
           )}
 
+          {/* Optional grid of key stats (label/value pairs) for this project. */}
           {project.stats && (
             <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
               {project.stats.map((stat) => (
@@ -55,6 +61,7 @@ export default function ProjectsPanel() {
             </dl>
           )}
 
+          {/* Tags listing the technologies used in this project. */}
           <div className="flex flex-wrap gap-1.5 mb-3">
             {project.tech.map((tech) => (
               <span key={tech} className="tactical-tag">
@@ -63,6 +70,7 @@ export default function ProjectsPanel() {
             ))}
           </div>
 
+          {/* Optional link to view the live project, shown only when a real link exists. */}
           {project.link && project.link !== "#" && (
             <a href={project.link} target="_blank" rel="noopener noreferrer" className="tactical-btn-outline">
               {project.linkLabel || "View project"}

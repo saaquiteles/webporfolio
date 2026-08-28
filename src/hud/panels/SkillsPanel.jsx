@@ -2,9 +2,11 @@ import { motion } from "framer-motion";
 import { drawerIn, stagger } from "../../utils/motion";
 import { skills, skillCategoryLabels } from "../../data/cvData";
 
+// Renders the Skills panel: one labeled group of skill tags per category.
 export default function SkillsPanel() {
   return (
     <motion.div variants={stagger()} initial="hidden" animate="visible" className="space-y-6">
+      {/* Loop through each skill category and render its heading plus its list of skill tags. */}
       {Object.entries(skills).map(([category, list]) => (
         <motion.div key={category} variants={drawerIn}>
           <h3 className="hud-eyebrow mb-2.5">{skillCategoryLabels?.[category] || category}</h3>

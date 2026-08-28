@@ -10,10 +10,15 @@
 // the barrel tip sits at negative Z and lines up with MuzzleFlash's own
 // muzzle-tip position without any extra compensating rotation.
 
+// The gun's three main colors: army green (body), a darker army green
+// (grip), and steel (bare metal parts).
 const ARMY_GREEN = "#4b5320";
 const ARMY_GREEN_DARK = "#3a4019";
 const STEEL = "#3a3d3a";
 
+// Renders the whole pistol as a group of simple shapes — a slide, grip,
+// magazine plate, trigger guard, barrel tip, glowing rail accent, and
+// rear sight.
 export default function ProceduralGlock() {
   return (
     <group>

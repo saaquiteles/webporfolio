@@ -5,13 +5,16 @@ import { TARGETS } from "../data/targets";
 // entered the range (even mid-modal), listing all five targets with a
 // glowing cyan/emerald checkmark for each one already shot.
 export default function RadarHUD({ unlockedIds, visible }) {
+  // Don't render the radar at all when it shouldn't be shown.
   if (!visible) return null;
 
   return (
     <div className="hud-panel hud-corners fixed right-3 top-1/2 z-30 w-52 -translate-y-1/2 px-4 py-4 sm:right-4">
       <p className="hud-eyebrow mb-3">Range Status</p>
+      {/* List every target, marking each one with a checkmark if it's already been cleared. */}
       <ol className="space-y-2.5">
         {TARGETS.map((target) => {
+          // Check whether this particular target's section has already been unlocked.
           const cleared = unlockedIds.includes(target.id);
           return (
             <li
@@ -28,6 +31,7 @@ export default function RadarHUD({ unlockedIds, visible }) {
           );
         })}
       </ol>
+      {/* Shows a running tally like "2/5 sections cleared". */}
       <div className="mt-4 border-t border-offwhite/10 pt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-offwhite/40">
         {unlockedIds.length}/{TARGETS.length} sections cleared
       </div>

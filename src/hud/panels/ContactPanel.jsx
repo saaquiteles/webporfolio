@@ -4,20 +4,24 @@ import { Download, Mail, Phone, Send } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { personal } from "../../data/cvData";
 
+// Builds a mailto link pre-filled with a subject line and greeting message for the contact button.
 const mailtoHref = `mailto:${personal.email}?subject=${encodeURIComponent(
   `Portfolio contact — ${personal.name}`
 )}&body=${encodeURIComponent(
   `Hi ${personal.name.split(" ")[0]},\n\nI came across your firing-range portfolio and wanted to reach out about...\n\n`
 )}`;
 
+// Renders the Contact panel: a short blurb, contact links, action buttons, and a disclaimer note.
 export default function ContactPanel() {
   return (
     <div className="space-y-6">
+      {/* Short intro blurb about availability. */}
       <p className="text-sm text-offwhite/75">
         Open to full-stack developer roles and collaborations. Email is the fastest route — a reply is
         resolved within a reasonable turnaround.
       </p>
 
+      {/* Direct contact links: email, phone, LinkedIn, and GitHub. */}
       <div className="space-y-3">
         <a
           href={`mailto:${personal.email}`}
@@ -53,6 +57,7 @@ export default function ContactPanel() {
         </a>
       </div>
 
+      {/* Action buttons: send a pre-filled email or download the resume PDF. */}
       <div className="flex flex-wrap gap-3 pt-1">
         <a href={mailtoHref} className="tactical-btn">
           <Send size={15} aria-hidden="true" />
@@ -64,6 +69,7 @@ export default function ContactPanel() {
         </a>
       </div>
 
+      {/* Disclaimer explaining the email button just opens the visitor's own mail client. */}
       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-offwhite/35 pt-1">
         &ldquo;Send Transmission&rdquo; opens your own mail client with this pre-filled &mdash; there&rsquo;s no
         backend behind this range to fake a &ldquo;message sent&rdquo; confirmation.

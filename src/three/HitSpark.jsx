@@ -2,10 +2,16 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 
+// How many little cube particles make up one burst, how long the burst
+// lasts (in seconds), and a plain 0..PARTICLE_COUNT-1 list used to loop
+// over them.
 const PARTICLE_COUNT = 14;
 const LIFETIME = 0.45;
 const PARTICLE_INDICES = Array.from({ length: PARTICLE_COUNT }, (_, i) => i);
 
+// Shows a small particle explosion at a target's position when it's hit,
+// then removes itself once the animation finishes.
+//
 // A short-lived, self-removing particle burst spawned at a target's
 // position on a confirmed hit. Mounted imperatively by RangeScene (added
 // to a small `sparks` array on hit, removed via onDone once its lifetime
@@ -20,6 +26,8 @@ export default function HitSpark({ position, color = "#00FF87", onDone }) {
   const elapsed = useRef(0);
   const directionsRef = useRef(null);
 
+  // Picks a random flight direction/speed for each particle, once, right
+  // after this component first mounts.
   useLayoutEffect(() => {
     directionsRef.current = PARTICLE_INDICES.map(() => {
       const v = new Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
@@ -27,11 +35,15 @@ export default function HitSpark({ position, color = "#00FF87", onDone }) {
     });
   }, []);
 
+  // Tells the parent (via onDone) to remove this burst once its lifetime
+  // has elapsed.
   useEffect(() => {
     const timer = setTimeout(() => onDone?.(), LIFETIME * 1000 + 60);
     return () => clearTimeout(timer);
   }, [onDone]);
 
+  // Every frame, moves each particle further along its direction and
+  // shrinks it, so the burst expands outward and fades away.
   useFrame((_, delta) => {
     const directions = directionsRef.current;
     const group = groupRef.current;
@@ -46,6 +58,8 @@ export default function HitSpark({ position, color = "#00FF87", onDone }) {
     });
   });
 
+  // Renders one small colored cube per particle, all starting at the hit
+  // position.
   return (
     <group ref={groupRef} position={position}>
       {PARTICLE_INDICES.map((i) => (

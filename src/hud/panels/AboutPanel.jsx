@@ -8,9 +8,11 @@ import { personal, summary } from "../../data/cvData";
 // paragraph rather than rendering the raw newlines/indentation.
 const bio = summary.trim().replace(/\s+/g, " ");
 
+// Renders the About panel: profile photo, name/title/location, and bio text, animated in with a staggered entrance.
 export default function AboutPanel() {
   return (
     <motion.div variants={stagger()} initial="hidden" animate="visible" className="space-y-6">
+      {/* Profile header: headshot photo plus name, title, and location. */}
       <motion.div variants={drawerIn} className="flex items-start gap-4">
         <div className="w-20 h-20 shrink-0 border border-cyan/30 bg-charcoal overflow-hidden">
           <img
@@ -32,6 +34,7 @@ export default function AboutPanel() {
         </div>
       </motion.div>
 
+      {/* Displays the cleaned-up bio paragraph. */}
       <motion.p variants={drawerIn} className="text-sm leading-relaxed text-offwhite/80">
         {bio}
       </motion.p>

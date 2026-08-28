@@ -16,9 +16,12 @@ import { Quaternion, Vector3 } from "three";
 // WeaponRig.jsx), so coordinates are ProceduralGlock's own raw, un-offset
 // geometry. WeaponRig's REST_POSITION was raised to give real vertical
 // room here — see its comment for the frustum math.
+
+// The arm's skin tone, and the cyan color used for its cuff band.
 const SKIN = "#e8b894";
 const CUFF_ACCENT = "#00F0FF";
 
+// The arm slab's cross-section size, and how long its cuff band is.
 const ARM_WIDTH = 0.095;
 const ARM_HEIGHT = 0.085;
 const CUFF_LENGTH = 0.045;
@@ -37,8 +40,12 @@ const LEFT_ARM = {
   far: [-0.22, -0.35, 0.26]
 };
 
+// A reusable "straight up" reference vector, used below to work out how
+// far to rotate a slab so it points from one given point to another.
 const UP = new Vector3(0, 1, 0);
 
+// Given two points, works out the midpoint, length, and rotation needed to
+// stretch a single box so it spans exactly from one point to the other.
 function useAlignedSlab(near, far) {
   return useMemo(() => {
     const start = new Vector3(...near);
@@ -54,6 +61,9 @@ function useAlignedSlab(near, far) {
   }, [near, far]);
 }
 
+// Renders one arm as a single stretched box (using useAlignedSlab above)
+// plus a small glowing cuff band near its grip end.
+//
 // One slab: the arm itself (sharp-edged box) plus a thin cyan cuff band
 // near the grip end, the one tie-in to the site's tactical accent
 // palette. No other pieces — one continuous mass, no seams.
@@ -84,6 +94,8 @@ function Arm({ near, far }) {
   );
 }
 
+// Renders both viewmodel arms (right/primary and left/support) gripping
+// the gun.
 export default function Hands() {
   return (
     <group>

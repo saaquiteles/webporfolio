@@ -21,6 +21,9 @@ import { playGunshot, playImpact } from "../audio/audioEngine";
 const TRACER_TARGET_RADIUS = 0.6;
 const TRACER_FALLBACK_DISTANCE = 40;
 
+// Works out where a fired shot's tracer streak should visually end: the
+// nearest target it's aimed at, or a far-off point along the aim direction
+// if it doesn't hit anything.
 function computeTracerEnd(origin, dir) {
   let nearest = null;
   for (const target of TARGETS) {
@@ -41,6 +44,10 @@ function computeTracerEnd(origin, dir) {
   return new Vector3(origin.x + dir.x * t, origin.y + dir.y * t, origin.z + dir.z * t);
 }
 
+// Renders and coordinates everything inside the 3D <Canvas>: the camera
+// and gun, the pointer-lock/WASD movement rig, the room itself, all five
+// targets, and short-lived hit-spark/tracer effects.
+//
 // The full Canvas-side world: camera + weapon, pointer-lock + WASD rig,
 // range shell, all five targets, and ephemeral hit-spark particles. Locking
 // is deliberately NOT bound through PointerLockControls' own built-in
@@ -52,17 +59,24 @@ function computeTracerEnd(origin, dir) {
 export default function RangeScene({ entered, isLocked, unlockedIds, onLockChange, onTargetHit, controlsRef }) {
   const { camera } = useThree();
   const weaponRef = useRef(null);
+  // Currently-playing hit-spark particle bursts and bullet tracers, each
+  // removed from this list once its own onDone fires.
   const [sparks, setSparks] = useState([]);
   const [tracers, setTracers] = useState([]);
 
+  // Removes one spark from the list once it's finished playing.
   const removeSpark = useCallback((key) => {
     setSparks((prev) => prev.filter((spark) => spark.key !== key));
   }, []);
 
+  // Removes one tracer from the list once it's finished playing.
   const removeTracer = useCallback((key) => {
     setTracers((prev) => prev.filter((tracer) => tracer.key !== key));
   }, []);
 
+  // Called when a target is actually hit: plays the impact sound, spawns
+  // a hit-spark burst there, and tells the parent (App.jsx) that this
+  // section is now unlocked.
   const handleHit = useCallback(
     (id) => {
       const target = TARGETS.find((t) => t.id === id);
@@ -75,6 +89,10 @@ export default function RangeScene({ entered, isLocked, unlockedIds, onLockChang
     [onTargetHit]
   );
 
+  // Listens for every left-click while pointer-locked and fires the gun
+  // (recoil, muzzle flash, gunshot sound, and a new tracer) no matter
+  // where on screen was clicked.
+  //
   // Any left-click while pointer-locked fires the weapon (recoil, muzzle
   // flash, gunshot, tracer) regardless of whether it lands on a target —
   // target hit consequences are handled separately by each Target's own
@@ -114,10 +132,14 @@ export default function RangeScene({ entered, isLocked, unlockedIds, onLockChang
     return () => window.removeEventListener("pointerdown", handlePointerDown, { capture: true });
   }, [camera, isLocked]);
 
+  // Targets only respond to hover/click once the player has both entered
+  // the range and locked the pointer.
   const interactive = entered && isLocked;
   const handleLock = useCallback(() => onLockChange(true), [onLockChange]);
   const handleUnlock = useCallback(() => onLockChange(false), [onLockChange]);
 
+  // Renders the camera+gun, the movement controls, the room, every target,
+  // and any currently-active hit-spark/tracer effects.
   return (
     <>
       <PerspectiveCamera makeDefault position={SPAWN_POSITION} fov={75} near={0.01} far={60}>

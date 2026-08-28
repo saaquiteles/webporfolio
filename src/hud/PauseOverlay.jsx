@@ -6,6 +6,7 @@ import { Crosshair } from "lucide-react";
 // come from a fresh click (browsers require a real user gesture), so this
 // is the "click to resume" affordance for that path.
 export default function PauseOverlay({ onResume }) {
+  // Renders the pause message plus a button that re-locks the pointer and resumes training.
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-navy/70 backdrop-blur-sm">
       <div className="hud-panel hud-corners flex max-w-xs flex-col items-center px-8 py-8 text-center">

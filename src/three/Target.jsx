@@ -3,9 +3,14 @@ import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { Color, MathUtils } from "three";
 
+// The two colors a target can glow: red while still locked, green once
+// unlocked.
 const IDLE_COLOR = new Color("#FF4655");
 const UNLOCKED_COLOR = new Color("#00FF87");
 
+// Renders one floating, clickable holographic target, with its label,
+// idle bobbing/spinning animation, and hover/unlock glow.
+//
 // A single floating holographic target. Hover/click use React Three
 // Fiber's own built-in pointer events rather than a hand-rolled raycaster:
 // PointerLockControls (see RangeScene) patches R3F's event pipeline to
@@ -19,6 +24,9 @@ export default function Target({ id, label, sublabel, position, unlocked, intera
   const materialRef = useRef();
   const hoverRef = useRef(false);
 
+  // Every frame: makes the target bob up and down and slowly spin, and
+  // smoothly fades its glow brightness toward whatever it should be right
+  // now (brighter on hover, dimmer once unlocked).
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
     if (bobRef.current) {
@@ -36,8 +44,12 @@ export default function Target({ id, label, sublabel, position, unlocked, intera
     }
   });
 
+  // Picks which glow color to use based on whether this target is unlocked.
   const color = unlocked ? UNLOCKED_COLOR : IDLE_COLOR;
 
+  // Renders the target's wireframe shape (the actual clickable hit area),
+  // a faint glowing "core" behind it purely for looks, and its floating
+  // text labels.
   return (
     <group position={position}>
       <group ref={bobRef}>
@@ -73,6 +85,7 @@ export default function Target({ id, label, sublabel, position, unlocked, intera
         </mesh>
       </group>
 
+      {/* the target's name/section title, floating above it */}
       <Text
         position={[0, 1.05, 0]}
         fontSize={0.22}
@@ -85,6 +98,7 @@ export default function Target({ id, label, sublabel, position, unlocked, intera
       >
         {label}
       </Text>
+      {/* a smaller subtitle line just below the target */}
       <Text
         position={[0, 0.78, 0]}
         fontSize={0.1}
@@ -96,6 +110,7 @@ export default function Target({ id, label, sublabel, position, unlocked, intera
       >
         {sublabel}
       </Text>
+      {/* an extra "UNLOCKED" label shown only once this target's been hit */}
       {unlocked && (
         <Text
           position={[0, 1.32, 0]}

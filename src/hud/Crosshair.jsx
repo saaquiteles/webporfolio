@@ -2,8 +2,10 @@
 // locked into the range (hidden during the loading screen, pause overlay,
 // and section modal, where the real cursor takes over instead).
 export default function Crosshair({ visible }) {
+  // Don't render anything at all when the crosshair shouldn't be shown.
   if (!visible) return null;
 
+  // Draws the small reticle (a center dot with four tick marks) fixed in the middle of the screen.
   return (
     <div className="pointer-events-none fixed inset-0 z-30 flex items-center justify-center" aria-hidden="true">
       <div className="relative h-6 w-6">

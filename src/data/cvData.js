@@ -1,3 +1,4 @@
+// Basic contact/identity info shown in the resume header (name, title, location, contact links).
 export const personal = {
   name: "Sean Argie A. Quiteles",
   title: "Programmer/Analyst",
@@ -8,6 +9,7 @@ export const personal = {
   github: "https://github.com/saaquiteles"
 };
 
+// A short paragraph of professional summary text describing who this person is and what they do.
 export const summary = `
   I am a Programmer/Analyst with hands-on experience in Java, Spring Boot, Thymeleaf, and React,
   currently advancing through Vertere Global Solutions' Hire-Train-Deploy (HTD) Program.
@@ -19,6 +21,7 @@ export const summary = `
   my expertise in full-stack architecture and software testing.
 `;
 
+// The list of past jobs/roles, each with a role, company, duration, and bullet-point highlights.
 export const experience = [
   {
     role: "HTD Programmer/Analyst",
@@ -44,6 +47,7 @@ export const experience = [
   }
 ];
 
+// The list of schools attended, each with a degree, specialization, institution, and duration.
 export const education = [
   {
     degree: "Bachelor of Science in Computer Engineering",
@@ -59,6 +63,7 @@ export const education = [
   }
 ];
 
+// The list of earned certifications, each with a title, issuer, date, and a link to view the credential.
 export const certifications = [
   {
     title: "Associate Data Engineer",
@@ -69,6 +74,7 @@ export const certifications = [
   }
 ];
 
+// The list of notable accomplishments/experiences outside of jobs and school (e.g. site visits, events).
 export const accomplishments = [
   {
     title: "International Technology Site Visits – Japan",
@@ -82,6 +88,7 @@ export const accomplishments = [
   }
 ];
 
+// The list of featured projects shown in the "Projects" section, each with a title, description, tech stack, and links.
 export const projects = [
   {
     accession: "NO. 001",
@@ -115,6 +122,7 @@ export const projects = [
   }
 ];
 
+// Maps each internal skill category key (e.g. "programming") to the display label shown in the UI.
 export const skillCategoryLabels = {
   programming: "Order I — Programming Languages",
   web: "Order II — Web & Frameworks",
@@ -125,6 +133,7 @@ export const skillCategoryLabels = {
   soft: "Order VII — Field Conduct"
 };
 
+// The actual skills grouped by category (matching the keys used in skillCategoryLabels) for the skills list.
 export const skills = {
   programming: ["Java", "Python", "JavaScript", "TypeScript"],
   web: ["React", "Spring Boot", "Thymeleaf", "Node.js", "Express", "REST APIs", "DTO Patterns", "HTML", "CSS"],

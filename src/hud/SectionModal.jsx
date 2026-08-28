@@ -10,8 +10,10 @@ import { playUiBlip } from "../audio/audioEngine";
 // it as part of the hit handler) — closing here (button click or Escape)
 // re-engages it via onClose.
 export default function SectionModal({ sectionId, onClose }) {
+  // Look up which panel (About, Skills, Projects, etc.) to display for the currently active section id.
   const panel = sectionId ? PANELS[sectionId] : null;
 
+  // When a panel opens, play a sound effect and start listening for the Escape key so pressing it closes the modal.
   useEffect(() => {
     if (!panel) return undefined;
     playUiBlip(true);
@@ -25,8 +27,10 @@ export default function SectionModal({ sectionId, onClose }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [panel, onClose]);
 
+  // Grab the icon component for the current panel, if one is set.
   const Icon = panel?.icon;
 
+  // Animates the modal sliding in and out, only rendering it while a panel is actually selected.
   return (
     <AnimatePresence>
       {panel && (
@@ -45,6 +49,7 @@ export default function SectionModal({ sectionId, onClose }) {
             className="hud-corners m-3 flex flex-1 flex-col overflow-hidden border border-cyan/30 backdrop-blur-md sm:m-4"
             style={{ background: "var(--glass)" }}
           >
+            {/* Header showing the panel's subtitle, title, and icon. */}
             <div className="flex items-start justify-between gap-4 border-b border-cyan/20 px-5 pb-4 pt-5 sm:px-6">
               <div>
                 <p className="hud-eyebrow mb-1">{panel.subtitle}</p>
@@ -55,10 +60,12 @@ export default function SectionModal({ sectionId, onClose }) {
               {Icon && <Icon size={22} className="mt-1 shrink-0 text-crimson" aria-hidden="true" />}
             </div>
 
+            {/* Renders the actual content component for the selected section (About, Skills, Projects, etc.). */}
             <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
               <panel.Component />
             </div>
 
+            {/* Button that closes the modal, playing a sound and re-engaging pointer lock. */}
             <div className="border-t border-cyan/20 px-5 py-4 sm:px-6">
               <button
                 type="button"

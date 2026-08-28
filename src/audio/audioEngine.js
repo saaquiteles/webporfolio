@@ -4,8 +4,10 @@
 // module-level singleton: browsers block audio until a real user gesture,
 // so it's only created/resumed from the "LOCK IN" click handler.
 
+// The single shared AudioContext instance every sound effect plays through, created lazily the first time it's needed.
 let ctx = null;
 
+// Returns the shared AudioContext, creating it on first call (and returning null if audio isn't supported/available).
 function getContext() {
   if (typeof window === "undefined") return null;
   if (!ctx) {
@@ -28,6 +30,7 @@ export function unlockAudio() {
   return c;
 }
 
+// Generates a short burst of filtered white noise (used as the crackly/percussive part of a sound effect).
 function noiseBurst(c, { duration, filterFreq, filterType = "bandpass", gain = 1, when = 0 }) {
   const now = c.currentTime + when;
   const sampleCount = Math.max(1, Math.floor(c.sampleRate * duration));
@@ -54,6 +57,7 @@ function noiseBurst(c, { duration, filterFreq, filterType = "bandpass", gain = 1
   source.stop(now + duration);
 }
 
+// Plays a single oscillator tone that slides from one pitch to another (used as the low "thump" part of a sound effect).
 function thump(c, { duration, freqFrom, freqTo, type = "square", gain = 0.6, when = 0 }) {
   const now = c.currentTime + when;
   const osc = c.createOscillator();
