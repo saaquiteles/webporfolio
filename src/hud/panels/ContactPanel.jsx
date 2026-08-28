@@ -63,7 +63,7 @@ export default function ContactPanel() {
           <Send size={15} aria-hidden="true" />
           Send Transmission
         </a>
-        <a href="/resume.pdf" download className="tactical-btn-outline">
+        <a href={`${import.meta.env.BASE_URL}resume.pdf`} download className="tactical-btn-outline">
           <Download size={14} aria-hidden="true" />
           Download Resume
         </a>

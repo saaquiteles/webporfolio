@@ -16,7 +16,7 @@ export default function AboutPanel() {
       <motion.div variants={drawerIn} className="flex items-start gap-4">
         <div className="w-20 h-20 shrink-0 border border-cyan/30 bg-charcoal overflow-hidden">
           <img
-            src="/headshot.png"
+            src={`${import.meta.env.BASE_URL}headshot.png`}
             alt={personal.name}
             className="w-full h-full object-cover"
             onError={(event) => {
